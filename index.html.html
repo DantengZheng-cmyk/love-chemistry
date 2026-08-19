@@ -675,8 +675,10 @@
       }
     });
     // ------------------------------------------
-
-    ;});
+document.getElementById('ctaLink').addEventListener('click',e=>{
+  e.preventDefault(); // 阻止了 <a> 標籤預設的網址跳轉功能
+  document.getElementById('report').scrollIntoView({behavior:'smooth'}); // 改為平滑滾動到「生成報告」區塊
+});
   })();
 })();
 </script>
