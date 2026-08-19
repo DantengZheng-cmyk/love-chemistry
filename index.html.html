@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>心動的化學風暴 · 四幕互動劇 · 泛思醫學</title>
+<meta name="description" content="從 0.2 秒的一見鍾情，到第六個月沙發上的無聲週末——四幕互動，走完一場戀愛的化學風暴。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Space+Mono:wght@400;700&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#180B15; --ink-2:#22101C; --panel:#2C1524; --line:#43263A;
+    --rose:#FF5D73; --rose-soft:#FF8A9B; --ember:#FF9F5C; --amber:#FFC98A;
+    --signal:#6EE7C7; --signal-dim:#3FA98F;
+    --paper:#F6ECE6; --paper-2:#EADED4;
+    --text:#F4E7E9; --muted:#C09BAB; --muted-2:#8E6F81;
+    --serif:'Fraunces','Noto Serif TC',Georgia,serif;
+    --mono:'Space Mono','Noto Sans TC',ui-monospace,monospace;
+    --sans:'Noto Sans TC',system-ui,-apple-system,sans-serif;
+    --bar:46px; --wrap:960px;
+    --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--ink);color:var(--text);font-family:var(--sans);line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden;padding-top:var(--bar)}
+  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:radial-gradient(1100px 700px at 80% -10%, rgba(255,93,115,.14), transparent 60%),
+      radial-gradient(900px 600px at 5% 110%, rgba(110,231,199,.08), transparent 60%)}
+  .wrap{max-width:var(--wrap);margin:0 auto;padding:0 22px;position:relative;z-index:1}
+  section{position:relative;z-index:1}
+  a{color:inherit} button{font-family:inherit;cursor:pointer}
+  :focus-visible{outline:2px solid var(--signal);outline-offset:3px;border-radius:6px}
+  .eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--signal);display:inline-flex;align-items:center;gap:10px}
+  .eyebrow::before{content:"";width:24px;height:1px;background:var(--signal-dim)}
+
+  /* ---------- top readout ---------- */
+  #readout{position:fixed;top:0;left:0;right:0;height:var(--bar);z-index:50;
+    display:flex;align-items:center;gap:14px;padding:0 18px;
+    background:rgba(24,11,21,.82);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);
+    font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.06em}
+  #readout .ro-tag{color:var(--signal);letter-spacing:.2em;font-size:10.5px}
+  #readout .mini{width:56px;height:20px;flex:none}
+  #readout .ro-bpm{color:var(--rose);font-weight:700;font-size:15px}
+  #readout .ro-h{margin-left:auto;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:44vw}
+  #readout .ro-h b{color:var(--rose-soft);font-weight:400}
+  @media(max-width:520px){#readout .ro-tag{display:none}}
+
+  /* ---------- hero ---------- */
+  .hero{min-height:calc(100svh - var(--bar));display:flex;flex-direction:column;justify-content:center;padding:70px 0 60px}
+  .hero h1{font-family:var(--serif);font-weight:600;font-size:clamp(38px,7vw,80px);line-height:1.05;letter-spacing:-.01em;margin:20px 0 22px;max-width:16ch}
+  .hero h1 em{font-style:italic;color:var(--rose-soft)}
+  .hero .lede{font-size:clamp(16px,2.1vw,20px);color:var(--muted);max-width:44ch;margin-bottom:22px}
+  .hero .lede b{color:var(--text);font-weight:500}
+  .scene-list{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:34px;font-family:var(--mono);font-size:11.5px;color:var(--muted-2)}
+  .scene-list span{border:1px solid var(--line);border-radius:100px;padding:5px 12px}
+  .scene-list span b{color:var(--signal);font-weight:400}
+  .cta{display:inline-flex;align-items:center;gap:12px;background:var(--rose);color:#2A0A12;border:none;
+    font-family:var(--mono);font-weight:700;font-size:15px;letter-spacing:.04em;padding:16px 28px;border-radius:100px;
+    transition:transform .18s, background .18s;box-shadow:0 12px 40px -12px rgba(255,93,115,.7)}
+  .cta:hover{transform:translateY(-2px);background:var(--rose-soft)}
+  .cta .arw{transition:transform .18s} .cta:hover .arw{transform:translateY(3px)}
+
+  /* ---------- scene shell ---------- */
+  .scene{padding:70px 0;border-top:1px solid var(--line)}
+  .scene-tag{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 16px;margin-bottom:14px}
+  .scene-tag .act{font-family:var(--mono);font-size:12px;color:var(--signal);letter-spacing:.14em}
+  .scene-tag .time{font-family:var(--mono);font-size:12px;color:var(--rose-soft);letter-spacing:.06em}
+  .scene h2{font-family:var(--serif);font-size:clamp(26px,4.4vw,42px);font-weight:600;line-height:1.1;margin-bottom:12px}
+  .scene .setting{color:var(--muted);max-width:56ch;margin-bottom:6px}
+  .scene .inner{font-family:var(--serif);font-style:italic;font-size:clamp(17px,2.3vw,21px);color:var(--text);border-left:2px solid var(--rose);padding-left:16px;margin:18px 0 24px}
+
+  /* interactive stage + texture layers */
+  .stage{position:relative;isolation:isolate;background:radial-gradient(140% 120% at 50% 0%, #2a1322, #160a12 70%);
+    border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:0 40px 90px -55px rgba(0,0,0,.95), inset 0 1px 0 rgba(255,255,255,.03)}
+  .stage::before{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;background-image:var(--grain);opacity:.3;mix-blend-mode:overlay}
+  .stage::after{content:"";position:absolute;inset:0;z-index:4;pointer-events:none;border-radius:20px;box-shadow:inset 0 0 150px 26px rgba(0,0,0,.62)}
+  .stage canvas{position:absolute;inset:0;width:100%;height:100%;z-index:1}
+  .stage-hint{position:absolute;top:18px;left:0;right:0;text-align:center;font-family:var(--mono);font-size:12.5px;color:var(--muted);letter-spacing:.05em;z-index:6;pointer-events:none;transition:opacity .5s}
+  .stage-hint b{color:var(--signal)}
+
+  .alert{position:absolute;left:16px;right:16px;bottom:16px;z-index:9;
+    background:rgba(20,9,16,.92);backdrop-filter:blur(6px);border:1px solid var(--rose);border-radius:14px;padding:14px 16px;
+    display:flex;gap:12px;align-items:flex-start;transform:translateY(18px);opacity:0;pointer-events:none;transition:all .5s cubic-bezier(.2,.7,.2,1)}
+  .alert.show{transform:none;opacity:1}
+  .alert.cool{border-color:var(--signal)}
+  .alert .ic{font-size:20px;line-height:1.2}
+  .alert .txt{font-family:var(--mono);font-size:12.5px;color:var(--text);letter-spacing:.02em;line-height:1.55}
+  .alert .txt b{color:var(--rose-soft);font-weight:700;display:block;margin-bottom:2px}
+  .alert.cool .txt b{color:var(--signal)}
+
+  .backstage{margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:14px;max-height:0;opacity:0;overflow:hidden;transition:max-height .6s ease, opacity .6s ease, margin .6s ease}
+  .backstage.show{max-height:460px;opacity:1}
+  @media(max-width:640px){.backstage{grid-template-columns:1fr}}
+  .bs-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+  .bs-card .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--signal);margin-bottom:8px}
+  .bs-card p{font-size:14.5px;color:var(--muted);line-height:1.6}
+  .bs-card p b{color:var(--text);font-weight:500}
+  .next{margin-top:22px;display:none;align-items:center;gap:10px;background:transparent;color:var(--rose);border:1px solid var(--rose);
+    font-family:var(--mono);font-weight:700;font-size:14px;letter-spacing:.05em;padding:12px 22px;border-radius:100px;transition:all .18s}
+  .next.show{display:inline-flex} .next:hover{background:var(--rose);color:#2A0A12}
+
+  /* stage sizing */
+  #stage1,#stage3{height:360px} #stage4{height:360px}
+  .flash{position:absolute;inset:0;background:#fff;opacity:0;z-index:8;pointer-events:none}
+  .ring{position:absolute;left:50%;top:50%;width:16px;height:16px;border-radius:50%;border:2px solid var(--rose);transform:translate(-50%,-50%);opacity:0;z-index:6;pointer-events:none}
+  #cv1{transition:filter .9s ease, opacity .9s ease}
+  #cv1.blurred{filter:blur(5px) brightness(.4) saturate(.5)}
+  .spark-wrap{position:absolute;left:57%;top:45%;transform:translate(-50%,-50%);z-index:5;cursor:pointer;width:78px;height:34px;animation:eyesFloat 3s ease-in-out infinite}
+  .spark-halo{position:absolute;left:50%;top:50%;width:120px;height:120px;transform:translate(-50%,-50%);border-radius:50%;z-index:-1;
+    background:radial-gradient(circle, rgba(255,150,130,.3), transparent 62%);animation:haloBreath 3s ease-in-out infinite}
+  .spark-svg{position:relative;width:100%;height:100%;overflow:visible;filter:drop-shadow(0 0 10px rgba(255,150,140,.6))}
+  .spark-svg .socket{fill:rgba(255,238,224,.16);stroke:var(--rose-soft);stroke-width:1.6}
+  .spark-svg .iris{fill:url(#irisG)}
+  .spark-svg .pupil{fill:#40121e}
+  .spark-svg .glint{fill:#fff}
+  .spark-svg .eyeg{transform-box:fill-box;transform-origin:center;animation:eyeBlink 4.4s ease-in-out infinite}
+  @keyframes eyesFloat{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.06)}}
+  @keyframes haloBreath{0%,100%{opacity:.55}50%{opacity:1}}
+  @keyframes eyeBlink{0%,92%,100%{transform:scaleY(1)}96%{transform:scaleY(.08)}}
+  .spark-wrap.lit{animation:none}
+  .spark-wrap.lit .spark-halo{animation:none;opacity:1;width:180px;height:180px;background:radial-gradient(circle, rgba(255,150,130,.5), transparent 62%)}
+  .spark-wrap.lit .spark-svg{filter:drop-shadow(0 0 26px rgba(255,150,140,.95))}
+  .spark-wrap.lit .eyeg{animation:none}
+
+  /* ===== Scene 2 ===== */
+  #stage2{padding:30px 18px 24px;display:flex;flex-direction:column;align-items:center;gap:20px;min-height:360px}
+  .s2-bloom{position:absolute;left:50%;top:36%;width:340px;height:340px;transform:translate(-50%,-50%) scale(.4);
+    border-radius:50%;background:radial-gradient(circle,rgba(255,93,115,.5),transparent 60%);z-index:1;opacity:.25;transition:transform .1s linear, opacity .1s linear;pointer-events:none;filter:blur(6px)}
+  .phone{position:relative;z-index:5;width:min(320px,86%);background:linear-gradient(180deg,#1a0d14,#140910);border:1px solid var(--line);border-radius:20px;padding:16px 14px;box-shadow:0 24px 50px -30px #000, inset 0 1px 0 rgba(255,255,255,.04)}
+  .ph-top{font-family:var(--mono);font-size:11px;color:var(--muted-2);text-align:center;letter-spacing:.1em;margin-bottom:12px;border-bottom:1px solid var(--line);padding-bottom:8px}
+  .bub{max-width:80%;padding:10px 13px;border-radius:14px;font-size:14.5px;margin-bottom:10px;line-height:1.5}
+  .bub.in{background:linear-gradient(180deg,#33192a,#2a1420);color:var(--text);border-bottom-left-radius:4px;box-shadow:0 2px 8px -4px #000}
+  .bub.time{font-family:var(--mono);font-size:10px;color:var(--muted-2);background:none;padding:0;margin:-4px 0 12px 4px}
+  .typing{display:flex;gap:5px;padding:12px 14px;background:#2a1420;border-radius:14px;width:60px;border-bottom-left-radius:4px}
+  .typing i{width:7px;height:7px;border-radius:50%;background:var(--muted);animation:td 1.2s infinite}
+  .typing i:nth-child(2){animation-delay:.2s} .typing i:nth-child(3){animation-delay:.4s}
+  @keyframes td{0%,60%,100%{opacity:.3;transform:translateY(0)}30%{opacity:1;transform:translateY(-4px)}}
+  .bub.out{background:linear-gradient(135deg,var(--rose),var(--ember));color:#2a0a12;margin-left:auto;border-bottom-right-radius:4px;display:none;box-shadow:0 6px 18px -8px rgba(255,93,115,.6)}
+  .holdbtn{position:relative;z-index:5;width:100px;height:100px;border-radius:50%;border:2px solid var(--rose);overflow:hidden;
+    background:rgba(255,93,115,.06);color:var(--rose);font-size:32px;display:flex;align-items:center;justify-content:center;
+    transition:transform .1s, box-shadow .3s;touch-action:none;user-select:none;box-shadow:0 0 0 0 rgba(255,93,115,0)}
+  .holdbtn:active{transform:scale(.96)}
+  .hold-fill{position:absolute;left:0;right:0;bottom:0;height:0%;background:linear-gradient(180deg,var(--rose),var(--ember));opacity:.85;z-index:-1;transition:height .05s linear}
+  .holdbtn .ic2{position:relative;z-index:2;filter:drop-shadow(0 0 6px rgba(255,93,115,.6))}
+  .hold-label{position:relative;z-index:5;font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.04em}
+
+  /* ===== Scene 3 ===== */
+  #stage3{padding:0}
+  .anx-chat{position:absolute;left:20px;top:22px;font-family:var(--mono);font-size:11.5px;color:var(--muted-2);max-width:62%;line-height:1.7;z-index:5}
+  .anx-chat b{color:var(--muted)}
+  .clock{position:absolute;top:20px;right:20px;width:38px;height:38px;border-radius:50%;border:1.5px solid var(--muted-2);z-index:5}
+  .clock::after{content:"";position:absolute;left:50%;top:50%;width:1.5px;height:13px;background:var(--rose);transform-origin:bottom;transform:translate(-50%,-100%);animation:spin 1.1s linear infinite}
+  @keyframes spin{to{transform:translate(-50%,-100%) rotate(360deg)}}
+  .thought{position:absolute;z-index:6;background:rgba(38,16,30,.95);border:1px solid var(--rose);border-radius:10px;
+    padding:9px 30px 9px 12px;font-size:13px;color:var(--rose-soft);box-shadow:0 10px 30px -14px #000;
+    text-shadow:1.5px 0 rgba(110,231,199,.5), -1.5px 0 rgba(255,93,115,.5);animation:pop .22s ease}
+  @keyframes pop{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
+  .thought .x{position:absolute;top:3px;right:5px;width:22px;height:22px;border:none;background:none;color:var(--muted);font-size:15px;line-height:1;cursor:pointer}
+  .thought .x:hover{color:var(--rose)}
+  .glitchy{animation:gl .16s steps(2) infinite}
+  @keyframes gl{0%{transform:translate(0)}50%{transform:translate(-1.5px,1px)}100%{transform:translate(1px,-1px)}}
+  .anx-start{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);z-index:7;background:var(--rose);color:#2a0a12;border:none;
+    font-family:var(--mono);font-weight:700;font-size:13px;padding:11px 20px;border-radius:100px;box-shadow:0 8px 24px -10px rgba(255,93,115,.7)}
+  .anx-count{position:absolute;left:20px;bottom:22px;font-family:var(--mono);font-size:11px;color:var(--muted-2);z-index:7}
+
+  /* ===== Scene 4 ===== */
+  #stage4{padding:0;background:radial-gradient(150% 130% at 50% 28%, #301c1a, #180c12 72%)}
+  .sunlight{position:absolute;top:-50px;right:-40px;width:320px;height:360px;z-index:1;pointer-events:none;filter:blur(4px);
+    background:radial-gradient(circle at 70% 22%, rgba(255,200,130,.38), transparent 54%)}
+  .glow4b{position:absolute;left:50%;top:46%;width:380px;height:380px;transform:translate(-50%,-50%);z-index:1;border-radius:50%;
+    background:radial-gradient(circle, rgba(255,182,120,.42), transparent 62%);opacity:.15;transition:opacity .12s linear;pointer-events:none}
+  .motes{position:absolute;inset:0;z-index:3;pointer-events:none}
+  .mote{position:absolute;width:5px;height:5px;border-radius:50%;background:rgba(255,214,158,.85);filter:blur(.5px);box-shadow:0 0 8px rgba(255,214,158,.7)}
+  @keyframes floatUp{0%{transform:translateY(0);opacity:0}25%{opacity:.85}100%{transform:translateY(-130px);opacity:0}}
+  .couch4{position:absolute;left:50%;bottom:58px;transform:translateX(-50%);width:min(360px,84%);height:76px;z-index:2;
+    border-radius:22px 22px 8px 8px;background:linear-gradient(180deg,#3c2231,#2a1622);box-shadow:0 -2px 22px -8px rgba(255,159,92,.28)}
+  .figs{position:absolute;left:50%;bottom:92px;transform:translateX(-50%);width:min(360px,84%);height:150px;z-index:3}
+  .personF{position:absolute;bottom:0;width:100px;height:150px}
+  .personF .body{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:82px;height:104px;border-radius:42px 42px 14px 14px;
+    background:linear-gradient(180deg, rgba(255,159,92,.85), rgba(255,93,115,.45));box-shadow:0 0 34px rgba(255,159,92,.32)}
+  .personF .head{position:absolute;bottom:92px;left:50%;transform:translateX(-50%);width:50px;height:50px;border-radius:50%;
+    background:radial-gradient(circle at 42% 38%, #ffe6c8, rgba(255,159,92,.75) 60%, transparent 80%);box-shadow:0 0 26px rgba(255,201,138,.5)}
+  .figA{left:6%;transform-origin:bottom center;transition:transform .16s ease}
+  .figB{right:6%;transform-origin:bottom center;transition:transform .16s ease}
+  .blanket4{position:absolute;left:6%;right:6%;bottom:60px;height:92px;z-index:4;border-radius:24px 24px 12px 12px;
+    background:linear-gradient(180deg,var(--ember),var(--rose));opacity:.94;
+    background-image:repeating-linear-gradient(45deg, rgba(0,0,0,.05) 0 5px, rgba(255,255,255,.05) 5px 11px);
+    transform:translateY(100%);transition:transform .12s linear}
+  .slider-wrap{position:absolute;left:24px;right:24px;bottom:20px;z-index:7}
+  .slider-wrap label{display:block;font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.04em;margin-bottom:9px;text-align:center}
+  input[type=range]{width:100%;-webkit-appearance:none;appearance:none;height:6px;border-radius:6px;
+    background:linear-gradient(90deg,var(--ember),var(--line));outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;border-radius:50%;
+    background:radial-gradient(circle at 40% 40%,#fff,var(--ember));border:none;cursor:grab;box-shadow:0 0 16px rgba(255,159,92,.7)}
+  input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;background:var(--ember);border:2px solid #fff;cursor:grab;box-shadow:0 0 16px rgba(255,159,92,.7)}
+
+  /* ---------- science recap ---------- */
+  .sci{padding:80px 0}
+  .sci h2{font-family:var(--serif);font-size:clamp(26px,4.2vw,40px);font-weight:600;margin:14px 0 10px}
+  .sci .sub{color:var(--muted);max-width:52ch;margin-bottom:30px}
+  .sci-table{width:100%;border-collapse:collapse;font-size:14px}
+  .sci-table th,.sci-table td{text-align:left;padding:14px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  .sci-table th{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--signal);font-weight:400}
+  .sci-table td.h{font-family:var(--serif);font-size:16px;color:var(--rose-soft);white-space:nowrap}
+  .sci-table td .ref{font-family:var(--mono);font-size:11px;color:var(--muted-2)}
+  .sci-table tr td{color:var(--muted)} .sci-table tr td b{color:var(--text);font-weight:500}
+  @media(max-width:680px){.sci-table thead{display:none}
+    .sci-table td{display:block;border:none;padding:3px 0}
+    .sci-table tr{display:block;border-bottom:1px solid var(--line);padding:14px 0}
+    .sci-table td.h{font-size:18px;margin-bottom:4px}}
+
+  /* ---------- quiz ---------- */
+  .report{padding:20px 0 90px}
+  .r-head{text-align:center;max-width:52ch;margin:0 auto 36px}
+  .r-head h2{font-family:var(--serif);font-size:clamp(26px,4.6vw,44px);font-weight:600;line-height:1.08;margin:14px 0 12px}
+  .r-head p{color:var(--muted)}
+  .quiz{max-width:620px;margin:0 auto}
+  .q{display:none} .q.active{display:block;animation:fade .4s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  .q-count{font-family:var(--mono);font-size:12px;color:var(--muted-2);letter-spacing:.2em;margin-bottom:12px}
+  .q h3{font-family:var(--serif);font-size:clamp(21px,3.3vw,29px);font-weight:600;line-height:1.2;margin-bottom:22px}
+  .opts{display:flex;flex-direction:column;gap:11px}
+  .opt{text-align:left;background:var(--ink-2);border:1px solid var(--line);color:var(--text);padding:17px 19px;border-radius:14px;font-size:15.5px;transition:all .16s;line-height:1.5}
+  .opt:hover{border-color:var(--rose);background:var(--panel);transform:translateX(4px)}
+  .card-stage{max-width:540px;margin:0 auto;display:none}
+  .card-stage.show{display:block;animation:fade .5s ease}
+  .card{background:var(--paper);color:#2A1018;border-radius:16px;overflow:hidden;box-shadow:0 50px 100px -40px rgba(0,0,0,.8);border:1px solid var(--paper-2)}
+  .card-head{background:#2A1018;color:var(--paper);padding:16px 22px;display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase}
+  .card-head .rose{color:var(--rose-soft)}
+  .card-main{padding:26px 24px 22px}
+  .card-label{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:#A97;text-transform:uppercase}
+  .card-type{font-family:var(--serif);font-size:32px;font-weight:600;line-height:1.05;margin:4px 0 2px;color:#2A1018}
+  .card-en{font-family:var(--mono);font-size:12.5px;color:#B06;letter-spacing:.05em;margin-bottom:18px}
+  .card-desc{font-size:14.5px;color:#4A2530;margin-bottom:20px;line-height:1.65}
+  .cm{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+  .cm-top{display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px;color:#7A4A56}
+  .cm-track{height:9px;background:var(--paper-2);border-radius:6px;overflow:hidden}
+  .cm-fill{height:100%;background:linear-gradient(90deg,var(--ember),var(--rose));border-radius:6px;width:0;transition:width 1s ease .2s}
+  .card-order{background:#F0E4DA;border-radius:12px;padding:15px 17px;margin-bottom:6px}
+  .card-order .ttl{font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:#B06;text-transform:uppercase;margin-bottom:6px}
+  .card-order .txt{font-size:14.5px;color:#3A1A24;line-height:1.6}
+  .card-foot{border-top:1px dashed #C9B4A6;padding:15px 24px;display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:12px;color:#7A4A56}
+  .card-foot .brand{font-weight:700;color:#2A1018;letter-spacing:.04em}
+  .qr{width:38px;height:38px;border-radius:6px;background:repeating-conic-gradient(#2A1018 0% 25%, #F0E4DA 0% 50%) 0/9px 9px}
+  .card-actions{display:flex;gap:12px;justify-content:center;margin-top:22px;flex-wrap:wrap}
+  .card-actions button{font-family:var(--mono);font-size:13px;font-weight:700;letter-spacing:.04em;padding:12px 22px;border-radius:100px;border:1px solid var(--line);background:transparent;color:var(--text);transition:all .16s}
+  .card-actions button.primary{background:var(--rose);color:#2A0A12;border-color:var(--rose)}
+  .card-actions button:hover{transform:translateY(-2px)}
+  .share-note{text-align:center;font-family:var(--mono);font-size:11px;color:var(--muted-2);margin-top:14px}
+
+  /* ---------- footer ---------- */
+  footer{padding:70px 0 60px;border-top:1px solid var(--line)}
+  .brandline{font-family:var(--serif);font-size:clamp(24px,3.6vw,34px);font-weight:600;line-height:1.2;max-width:20ch;margin-bottom:8px}
+  .brandline em{font-style:italic;color:var(--rose-soft)}
+  .brandsub{color:var(--muted);max-width:48ch;margin-bottom:26px}
+  .foot-meta{display:flex;flex-wrap:wrap;gap:12px 30px;font-family:var(--mono);font-size:12px;color:var(--muted-2);letter-spacing:.06em}
+  .foot-meta a{color:var(--signal);text-decoration:none}
+  .refs{margin-top:36px;padding-top:22px;border-top:1px solid var(--line)}
+  .refs summary{font-family:var(--mono);font-size:12px;letter-spacing:.14em;color:var(--muted);cursor:pointer;text-transform:uppercase}
+  .refs ol{margin:16px 0 0 18px;color:var(--muted-2);font-size:12.5px;line-height:1.9}
+  .disclaimer{margin-top:18px;font-size:12px;color:var(--muted-2);line-height:1.7}
+
+  @media (prefers-reduced-motion: reduce){*{scroll-behavior:auto;animation-duration:.001ms!important}}
+</style>
+</head>
+<body>
+
+<div id="readout" aria-hidden="true">
+  <span class="ro-tag">READOUT</span>
+  <svg class="mini" viewBox="0 0 56 20"><polyline id="miniLine" points="" fill="none" stroke="#FF5D73" stroke-width="1.6"/></svg>
+  <span><span class="ro-bpm" id="roBpm">72</span> BPM</span>
+  <span class="ro-h" id="roH">狀態：<b>待命</b></span>
+</div>
+
+<section class="hero"><div class="wrap">
+  <span class="eyebrow">泛思醫學 · 七夕特輯 / An Interactive Field Report</span>
+  <h1>一場戀愛，<br>是<em>四幕化學風暴</em>。</h1>
+  <p class="lede">從 <b>0.2 秒</b>的第一眼，到第六個月沙發上的無聲週末——每一幕，你的身體都在偷偷做決定。往下，親手走完這場風暴。</p>
+  <div class="scene-list">
+    <span><b>一</b>　0.2秒 · 一見鍾情</span>
+    <span><b>二</b>　第1週 · 凌晨1:30</span>
+    <span><b>三</b>　第1個月 · 已讀不回</span>
+    <span><b>四</b>　第6個月 · 沙發時光</span>
+  </div>
+  <a class="cta" href="#scene1">進入第一幕 <span class="arw">↓</span></a>
+</div></section>
+
+<!-- SCENE 1 -->
+<section class="scene" id="scene1"><div class="wrap">
+  <div class="scene-tag"><span class="act">第一幕 · THE SPARK</span><span class="time">T + 0.2 秒</span></div>
+  <h2>確認過眼神，風暴開始</h2>
+  <p class="setting">喧鬧的聚會，你推開門。視線穿過人海，剛好和角落的那道光對上眼。周圍的聲音像被按了靜音，你的世界只剩那一點亮。</p>
+  <p class="inner">「等等……那道光是誰？」</p>
+
+  <div class="stage" id="stage1">
+    <canvas id="cv1"></canvas>
+    <div class="stage-hint" id="hint1">滿室的眼神裡，<b>找到那雙為你而亮的</b></div>
+    <div class="spark-wrap" id="sparkEyes" role="button" tabindex="0" aria-label="點擊那雙特別吸引你的眼睛">
+      <span class="spark-halo"></span>
+      <svg class="spark-svg" viewBox="0 0 84 36" aria-hidden="true">
+        <defs><radialGradient id="irisG" cx="42%" cy="38%" r="60%">
+          <stop offset="0%" stop-color="#FFE0C8"/><stop offset="45%" stop-color="#FF8A9B"/><stop offset="100%" stop-color="#E85C73"/>
+        </radialGradient></defs>
+        <g class="eyeg"><path class="socket" d="M9,18 Q24,7 39,18 Q24,29 9,18 Z"/><circle class="iris" cx="24" cy="18" r="6"/><circle class="pupil" cx="24" cy="18" r="2.6"/><circle class="glint" cx="26" cy="16" r="1.1"/></g>
+        <g class="eyeg"><path class="socket" d="M45,18 Q60,7 75,18 Q60,29 45,18 Z"/><circle class="iris" cx="60" cy="18" r="6"/><circle class="pupil" cx="60" cy="18" r="2.6"/><circle class="glint" cx="62" cy="16" r="1.1"/></g>
+      </svg>
+    </div>
+    <div class="ring" id="ring1"></div>
+    <div class="flash" id="flash1"></div>
+    <div class="alert" id="alert1"><span class="ic">⚠️</span><span class="txt"><b>偵測到不明吸引力</b>多巴胺閥門已開啟｜反應時間 0.18 秒</span></div>
+  </div>
+
+  <div class="backstage" id="bs1">
+    <div class="bs-card"><div class="lbl">科學後台</div><p>大腦獎賞迴路（<b>腹側被蓋區 VTA、尾狀核</b>）瞬間點亮。研究提出：約五分之一秒、多達 <b>12 個腦區</b>協同釋放多巴胺等物質——與大腦「成癮」時亮起的是同一條路。</p></div>
+    <div class="bs-card"><div class="lbl">人話翻譯</div><p>不是你意志力差。是你的獎賞系統，已經自動把他<b>標記成了獎勵</b>。</p></div>
+  </div>
+  <a class="next" id="next1" href="#scene2">下一幕 · 凌晨 1:30 ↓</a>
+</div></section>
+
+<!-- SCENE 2 -->
+<section class="scene" id="scene2"><div class="wrap">
+  <div class="scene-tag"><span class="act">第二幕 · THE STORM</span><span class="time">T + 第 1 天～第 1 週</span></div>
+  <h2>凌晨 1:30 的「正在輸入中…」</h2>
+  <p class="setting">夜深了，你翻來覆去。手機突然亮起，是他：「你睡了嗎？」你秒開對話框，看著頂端閃爍的「正在輸入中…」，嘴角忍不住上揚，手心微微出汗。</p>
+  <p class="inner">「他主動密我了！我要回什麼才不會太刻意？」</p>
+
+  <div class="stage" id="stage2">
+    <div class="s2-bloom" id="s2bloom"></div>
+    <div class="phone">
+      <div class="ph-top">● ● ●　　訊息　　01:30</div>
+      <div class="bub in">你睡了嗎？</div>
+      <div class="bub time">01:30</div>
+      <div class="typing" id="typing2"><i></i><i></i><i></i></div>
+      <div class="bub out" id="out2">（已回覆）在啊，怎麼了 ♥</div>
+    </div>
+    <button class="holdbtn" id="hold2" aria-label="長按愛心回覆"><span class="hold-fill" id="holdFill"></span><span class="ic2">♥</span></button>
+    <div class="hold-label" id="holdLabel">長按愛心回覆</div>
+    <div class="alert" id="alert2"><span class="ic">📈</span><span class="txt"><b>正腎上腺素超標</b>睡意歸零 · 心動過速 · 你已進入成癮狀態</span></div>
+  </div>
+
+  <div class="backstage" id="bs2">
+    <div class="bs-card"><div class="lbl">科學後台</div><p>期待引發多巴胺瘋狂分泌；<b>正腎上腺素</b>激增啟動交感神經「戰或逃」——心跳加速、手心冒汗、輕微失眠。你以為的浪漫悸動，其實接近一次身體警戒。</p></div>
+    <div class="bs-card"><div class="lbl">人話翻譯</div><p>胃裡那群蝴蝶，其實是你的<b>交感神經在振翅</b>。</p></div>
+  </div>
+  <a class="next" id="next2" href="#scene3">下一幕 · 已讀不回 ↓</a>
+</div></section>
+
+<!-- SCENE 3 -->
+<section class="scene" id="scene3"><div class="wrap">
+  <div class="scene-tag"><span class="act">第三幕 · THE ANXIETY</span><span class="time">T + 第 1 個月</span></div>
+  <h2>已讀不回的 180 分鐘</h2>
+  <p class="setting">曖昧期最難熬的時刻。你發出邀約後，對方一直沒回。這三小時裡，你解鎖手機數十次，把對話往上滑了又滑，甚至開始懷疑自己。</p>
+  <p class="inner">「為什麼不回？在忙嗎？還是對我沒興趣？」</p>
+
+  <div class="stage" id="stage3">
+    <canvas id="cv3"></canvas>
+    <div class="anx-chat">你：<b>週末要不要一起去看那間新開的店？</b><br><span style="color:var(--muted-2)">已讀 · 15:02 · 未回覆</span></div>
+    <div class="clock"></div>
+    <div class="anx-count" id="anxCount"></div>
+    <button class="anx-start" id="anxStart">開始：把念頭關掉</button>
+    <div class="stage-hint" id="hint3" style="display:none">把冒出來的念頭，<b>一個一個關掉</b></div>
+    <div class="alert" id="alert3"><span class="ic">📉</span><span class="txt"><b>血清素系統活性驟降</b>理智線警告 · 大腦呈現輕度強迫特徵</span></div>
+  </div>
+
+  <div class="backstage" id="bs3">
+    <div class="bs-card"><div class="lbl">科學後台</div><p><b>血清素系統活性下降</b>（血清素轉運體密度接近強迫症 OCD 患者水平），讓你無法停止反覆思念；同時<b>皮質醇上升</b>，大腦把這段曖昧判讀成一種壓力。</p></div>
+    <div class="bs-card"><div class="lbl">人話翻譯</div><p>你不是想太多。是你的神經化學，正<b>逼著你重播</b>。</p></div>
+  </div>
+  <a class="next" id="next3" href="#scene4">下一幕 · 沙發時光 ↓</a>
+</div></section>
+
+<!-- SCENE 4 -->
+<section class="scene" id="scene4"><div class="wrap">
+  <div class="scene-tag"><span class="act">第四幕 · THE ANCHOR</span><span class="time">T + 第 6 個月之後</span></div>
+  <h2>沙發上的無聲週末</h2>
+  <p class="setting">星期日午後，陽光灑進客廳。兩束光坐在同一張沙發上，各自做著自己的事。沒有人說話，但只要靠得夠近，就覺得無比安心。</p>
+  <p class="inner">「這樣靜靜地待著，真好。」</p>
+
+  <div class="stage" id="stage4">
+    <div class="sunlight"></div>
+    <div class="glow4b" id="glow4"></div>
+    <div class="motes" id="motes"></div>
+    <div class="couch4"></div>
+    <div class="figs">
+      <div class="personF figA" id="figA"><div class="head"></div><div class="body"></div></div>
+      <div class="personF figB" id="figB"><div class="head"></div><div class="body"></div></div>
+    </div>
+    <div class="blanket4" id="blanket"></div>
+    <div class="slider-wrap">
+      <label for="slide4" id="slideLabel">慢慢滑動，讓兩個人靠近彼此 →</label>
+      <input type="range" id="slide4" min="0" max="100" value="0" aria-label="滑動讓他靠上你的肩">
+    </div>
+    <div class="alert cool" id="alert4"><span class="ic">🛡️</span><span class="txt"><b>催產素注入完成</b>化學風暴平息 · 已建立長期安全連結</span></div>
+  </div>
+
+  <div class="backstage" id="bs4">
+    <div class="bs-card"><div class="lbl">科學後台</div><p>多巴胺的狂風暴雨已平息。<b>催產素</b>在擁抱與親密接觸中緩緩釋放，抑制杏仁核的威脅反應，建立起深層的信任與依附——它與血管加壓素一起，讓關係從激情走向安穩。</p></div>
+    <div class="bs-card"><div class="lbl">人話翻譯</div><p>一個擁抱，就是一次<b>生化簽約</b>。心動讓你們相遇，催產素讓你們留下。</p></div>
+  </div>
+  <a class="next" id="next4" href="#science">看完整科學對照 ↓</a>
+</div></section>
+
+<!-- SCIENCE RECAP -->
+<section class="sci" id="science"><div class="wrap">
+  <span class="eyebrow">The Evidence · 科學對照表</span>
+  <h2>四幕背後，都是真的研究</h2>
+  <p class="sub">每一幕的化學變化都有文獻依據。以下用一句話對照每一幕的荷爾蒙與研究來源。</p>
+  <table class="sci-table">
+    <thead><tr><th>幕 / 荷爾蒙</th><th>一句話機制</th><th>依據</th></tr></thead>
+    <tbody>
+      <tr><td class="h">一 · 多巴胺</td><td>看見對象，獎賞迴路（VTA、尾狀核）瞬間活化；研究提出約 0.2 秒、12 個腦區協同，與成癮同路。<span class="ref"> ※「0.2 秒」為新聞稿層級說法。</span></td><td class="ref">Ortigue 2010<br>Aron & Fisher 2005</td></tr>
+      <tr><td class="h">二 · 正腎上腺素</td><td>交感神經「戰或逃」：心跳加速、手心冒汗、失眠、食慾下降。</td><td class="ref">綜述（含 Fisher）</td></tr>
+      <tr><td class="h">三 · 血清素↓／皮質醇↑</td><td><b>血清素系統活性下降</b>（血清素轉運體密度接近強迫症水平）→ 反覆思念；皮質醇升高 → 焦慮與壓力。</td><td class="ref">Marazziti 1999<br>Marazziti & Canale 2004</td></tr>
+      <tr><td class="h">四 · 催產素</td><td>擁抱與接觸釋放，抑制杏仁核威脅反應，建立信任與長期依附。</td><td class="ref">Schneiderman 2012</td></tr>
+    </tbody>
+  </table>
+</div></section>
+
+<!-- QUIZ -->
+<section class="report" id="report"><div class="wrap">
+  <div class="r-head">
+    <span class="eyebrow" style="justify-content:center">Generate · 生成你的報告</span>
+    <h2>你的戀愛，由哪種荷爾蒙主導？</h2>
+    <p>三個問題，測出你墜入愛河時最主導的化學物質，生成一張可截圖分享的「戀愛化學反應報告」。</p>
+  </div>
+  <div class="quiz" id="quiz">
+    <div class="q active" data-q="0"><div class="q-count">問題 01 / 03</div><h3>剛認識一個很有感覺的人，你最先出現的反應是？</h3><div class="opts">
+      <button class="opt" data-w="dopamine">忍不住一直想「他會不會也對我有意思？」，滿腦子小劇場</button>
+      <button class="opt" data-w="norepinephrine">心跳超快、手心冒汗，見到本人會語無倫次</button>
+      <button class="opt" data-w="serotonin">開始反覆看他的訊息、限動，重播每一句話</button>
+      <button class="opt" data-w="cortisol">既期待又緊張，隱約有種「完蛋了」的不安</button></div></div>
+    <div class="q" data-q="1"><div class="q-count">問題 02 / 03</div><h3>進入曖昧／交往後，你最享受的時刻是？</h3><div class="opts">
+      <button class="opt" data-w="dopamine">等待回覆、猜測心意的那種若即若離的刺激</button>
+      <button class="opt" data-w="oxytocin">安靜地依偎、擁抱，什麼都不用說的踏實感</button>
+      <button class="opt" data-w="norepinephrine">一起去做刺激的事，心跳加速的共同回憶</button>
+      <button class="opt" data-w="serotonin">整天在腦中回放和他相處的每個片段</button></div></div>
+    <div class="q" data-q="2"><div class="q-count">問題 03 / 03</div><h3>如果他突然已讀不回，你的第一反應？</h3><div class="opts">
+      <button class="opt" data-w="cortisol">立刻焦慮，開始腦補各種最壞的可能</button>
+      <button class="opt" data-w="serotonin">反覆檢查對話，一個字一個字重新解讀</button>
+      <button class="opt" data-w="dopamine">越難得到越想要，反而更在意他了</button>
+      <button class="opt" data-w="oxytocin">相信他有他的事，等一個擁抱就沒事了</button></div></div>
+  </div>
+  <div class="card-stage" id="cardStage">
+    <div class="card" id="reportCard">
+      <div class="card-head"><span>泛思醫學 · 戀愛化學反應報告</span><span class="rose">CONFIDENTIAL ♥</span></div>
+      <div class="card-main">
+        <div class="card-label">主導荷爾蒙 / Dominant Hormone</div>
+        <div class="card-type" id="cardType">—</div>
+        <div class="card-en" id="cardEn">—</div>
+        <div class="card-desc" id="cardDesc">—</div>
+        <div class="cm"><div class="cm-top"><span>心動指數 / Attraction Index</span><span id="scoreVal">0</span></div><div class="cm-track"><div class="cm-fill" id="scoreFill"></div></div></div>
+        <div class="cm"><div class="cm-top"><span>依附傾向 / Attachment</span><span id="attachVal">—</span></div></div>
+        <div class="card-order"><div class="ttl">醫囑 / Prescription</div><div class="txt" id="cardOrder">—</div></div>
+      </div>
+      <div class="card-foot"><span class="brand">FANSCI 泛思醫學</span><span style="display:flex;align-items:center;gap:10px">把嚴謹，做得好玩 <span class="qr" aria-hidden="true"></span></span></div>
+    </div>
+    <div class="card-actions"><button class="primary" id="againBtn">重新測一次</button><button id="scrollShare">截圖分享這張報告</button></div>
+    <p class="share-note">※ 截圖上方報告卡，分享到限動／群組。本頁為科普娛樂內容，非診斷用途。</p>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <span class="eyebrow">泛思醫學科技 · Fansci Medical</span>
+  <p class="brandline" style="margin-top:16px">嚴謹的醫學，<em>也可以讓人想分享</em>。</p>
+  <p class="brandsub">這頁的每一幕、每一個冷知識，都來自真實研究。我們每天做的，就是把艱澀的醫學證據，變成讓人看得懂、記得住、願意傳出去的內容——為藥廠、學會與醫療機構。</p>
+  <div class="foot-meta"><span>醫學內容製作</span><span>疾病衛教</span><span>互動企劃</span><span><a href="#" id="ctaLink">→ 想聊聊你的專案？</a></span></div>
+  <details class="refs"><summary>科學依據 / References</summary>
+    <ol>
+      <li>Ortigue S, Bianchi-Demicheli F, Patel N, Frum C, Lewis JW. The neuroimaging of love: fMRI meta-analysis evidence toward new perspectives in sexual medicine. <i>Journal of Sexual Medicine</i>, 2010.（「12 個腦區協同」出自本篇；「0.2 秒」為當時未發表之後續研究的新聞稿說法）</li>
+      <li>Aron A, Fisher H, et al. Reward, motivation, and emotion systems associated with early-stage intense romantic love. <i>Journal of Neurophysiology</i>, 2005.</li>
+      <li>Marazziti D, et al. Alteration of the platelet serotonin transporter in romantic love. <i>Psychological Medicine</i>, 1999.</li>
+      <li>Marazziti D, Canale D. Hormonal changes when falling in love. <i>Psychoneuroendocrinology</i>, 2004.</li>
+      <li>Schneiderman I, et al. Oxytocin during the initial stages of romantic attachment. <i>Psychoneuroendocrinology</i>, 2012.</li>
+    </ol>
+    <p class="disclaimer">本頁為科普與娛樂性質內容，用於展示醫學傳播的可能性，不構成醫療建議或診斷。部分時間標記與情境為敘事化呈現；個別生理反應因人而異。</p>
+  </details>
+</div></footer>
+
+<script>
+(function(){
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const DPR = Math.min(window.devicePixelRatio||1, 2);
+  function fitCanvas(cv){ const r=cv.getBoundingClientRect(); cv.width=Math.max(1,r.width*DPR); cv.height=Math.max(1,r.height*DPR); const c=cv.getContext('2d'); c.setTransform(DPR,0,0,DPR,0,0); return {c,w:r.width,h:r.height}; }
+
+  /* ---------- top readout ---------- */
+  const miniLine=document.getElementById('miniLine'),roBpm=document.getElementById('roBpm'),roH=document.getElementById('roH');
+  let bpm=72,targetBpm=72,tphase=0;
+  function beatY(p){const c=10,a=7;if(p<0.12)return c;if(p<0.22){const t=(p-0.12)/0.10;return c+a*0.15*t;}if(p<0.27){const t=(p-0.22)/0.05;return c+a*0.15-a*1.1*t;}if(p<0.32){const t=(p-0.27)/0.05;return c-a*0.95+a*1.1*t;}if(p<0.5)return c;if(p<0.62){const t=(p-0.5)/0.12;return c-a*0.2*Math.sin(t*Math.PI);}return c;}
+  function tickRO(){bpm+=(targetBpm-bpm)*0.05;roBpm.textContent=Math.round(bpm);tphase+=(bpm/60)*(1/60);let pts='';for(let x=0;x<=56;x+=2){const p=((tphase-(56-x)/70)%1+1)%1;pts+=x+','+beatY(p).toFixed(1)+' ';}miniLine.setAttribute('points',pts.trim());requestAnimationFrame(tickRO);}
+  if(!reduce)requestAnimationFrame(tickRO);
+  function setVitals(b,h){targetBpm=b;roH.innerHTML='狀態：<b>'+h+'</b>';}
+  function reveal(a,bs,nx,b,h){if(a)a.classList.add('show');if(bs)bs.classList.add('show');if(nx)nx.classList.add('show');setVitals(b,h);}
+
+  /* ---------- Scene 1: a party of eyes, one alluring pair ---------- */
+  (function(){
+    const cv=document.getElementById('cv1'); let S=fitCanvas(cv),c=S.c,W=S.w,H=S.h;
+    window.addEventListener('resize',()=>{S=fitCanvas(cv);c=S.c;W=S.w;H=S.h;init();});
+    let pairs=[], t=0;
+    function init(){ pairs=[]; const n=Math.round(W/60)+6;
+      for(let i=0;i<n;i++){ const ew=5+Math.random()*3;
+        pairs.push({x:26+Math.random()*(W-52),y:26+Math.random()*(H-74),ew:ew,eh:ew*0.62,sep:ew*2.5,
+          a:0.16+Math.random()*0.16,bob:Math.random()*6.28,blink:Math.random()*4+1.5,bt:Math.random()*3}); } }
+    init();
+    function drawEye(x,y,w,h,open,a){
+      const hh=Math.max(0.6,h*open);
+      c.beginPath(); c.moveTo(x-w,y); c.quadraticCurveTo(x,y-hh,x+w,y); c.quadraticCurveTo(x,y+hh,x-w,y); c.closePath();
+      c.fillStyle='rgba(214,206,220,'+(a*0.5)+')'; c.fill();
+      if(open>0.34){ c.save(); c.clip();
+        c.fillStyle='rgba(150,142,168,'+(a*1.7)+')'; c.beginPath(); c.arc(x,y,Math.min(w*0.5,hh*0.95),0,7); c.fill();
+        c.fillStyle='rgba(38,28,44,'+(a*1.9)+')'; c.beginPath(); c.arc(x,y,Math.min(w*0.22,hh*0.42),0,7); c.fill();
+        c.restore(); }
+      c.strokeStyle='rgba(206,198,216,'+(a*1.15)+')'; c.lineWidth=1; c.stroke();
+    }
+    function draw(){ t+=0.016; c.clearRect(0,0,W,H);
+      for(const p of pairs){ p.bt+=0.016; let open=1;
+        if(p.bt>p.blink){ const bp=p.bt-p.blink; if(bp<0.16){ open=Math.abs(Math.cos(bp/0.16*Math.PI)); } else { p.bt=0; p.blink=Math.random()*4+2; } }
+        const yy=p.y+Math.sin(t*0.8+p.bob)*2;
+        drawEye(p.x-p.sep/2,yy,p.ew,p.eh,open,p.a); drawEye(p.x+p.sep/2,yy,p.ew,p.eh,open,p.a); }
+      requestAnimationFrame(draw); }
+    if(!reduce)requestAnimationFrame(draw); else { for(const p of pairs){ drawEye(p.x-p.sep/2,p.y,p.ew,p.eh,1,p.a); drawEye(p.x+p.sep/2,p.y,p.ew,p.eh,1,p.a); } }
+    const eyes=document.getElementById('sparkEyes'),hint=document.getElementById('hint1'),flash=document.getElementById('flash1'),ring=document.getElementById('ring1');
+    let fired=false;
+    function fire(){ if(fired)return; fired=true; hint.style.opacity='0'; eyes.classList.add('lit'); cv.classList.add('blurred');
+      ring.style.left='57%'; ring.style.top='45%';
+      if(!reduce){ flash.animate([{opacity:0},{opacity:.5},{opacity:0}],{duration:540,easing:'ease-out'});
+        ring.animate([{opacity:.85,width:'16px',height:'16px'},{opacity:0,width:'260px',height:'260px'}],{duration:820,easing:'ease-out'}); }
+      setTimeout(()=>reveal(document.getElementById('alert1'),document.getElementById('bs1'),document.getElementById('next1'),92,'多巴胺 ↑ 心動'),320);
+    }
+    eyes.addEventListener('click',fire);
+    eyes.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();fire();}});
+  })();
+
+  /* ---------- Scene 2: long press ---------- */
+  (function(){
+    const btn=document.getElementById('hold2'),fill=document.getElementById('holdFill'),bloom=document.getElementById('s2bloom');
+    const label=document.getElementById('holdLabel'),typing=document.getElementById('typing2'),out=document.getElementById('out2');
+    const DUR=1400; let raf=null,start=0,done=false;
+    function frame(t){ if(!start)start=t; const p=Math.min((t-start)/DUR,1);
+      fill.style.height=(p*100)+'%'; bloom.style.transform='translate(-50%,-50%) scale('+(0.4+p*0.9)+')'; bloom.style.opacity=(0.25+p*0.55);
+      btn.style.boxShadow='0 0 '+(p*40)+'px '+(p*6)+'px rgba(255,93,115,'+(p*.5)+')'; targetBpm=78+p*46;
+      if(p<1)raf=requestAnimationFrame(frame); else finish(); }
+    function down(e){ e.preventDefault(); if(done)return; start=0; label.textContent='按住別放…'; raf=requestAnimationFrame(frame); }
+    function up(){ if(done||raf===null)return; cancelAnimationFrame(raf); raf=null; start=0;
+      fill.style.height='0%'; bloom.style.transform='translate(-50%,-50%) scale(.4)'; bloom.style.opacity='.25'; btn.style.boxShadow='none';
+      label.textContent='手滑了？再長按一次'; targetBpm=78; }
+    function burst(){ if(reduce)return; for(let i=0;i<10;i++){ const s=document.createElement('span');
+      s.textContent='♥'; s.style.cssText='position:absolute;left:50%;top:50%;color:var(--rose-soft);font-size:14px;pointer-events:none;z-index:6';
+      btn.parentElement.appendChild(s); const ang=Math.random()*6.28,d=40+Math.random()*50;
+      s.animate([{transform:'translate(-50%,-50%) translate(0,0)',opacity:1},{transform:'translate(-50%,-50%) translate('+Math.cos(ang)*d+'px,'+Math.sin(ang)*d+'px)',opacity:0}],{duration:700+Math.random()*300,easing:'ease-out'}).onfinish=()=>s.remove(); } }
+    function finish(){ done=true; if(raf)cancelAnimationFrame(raf); fill.style.height='100%';
+      typing.style.display='none'; out.style.display='block'; label.textContent='已送出 ♥'; btn.style.borderColor='var(--signal)'; burst();
+      reveal(document.getElementById('alert2'),document.getElementById('bs2'),document.getElementById('next2'),118,'正腎上腺素 ↑ 亢奮'); }
+    btn.addEventListener('pointerdown',down); window.addEventListener('pointerup',up);
+    btn.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&!done){e.preventDefault();finish();}});
+  })();
+
+  /* ---------- Scene 3: ECG chaos + intrusive thoughts ---------- */
+  (function(){
+    const cv=document.getElementById('cv3'); let S=fitCanvas(cv),c=S.c,W=S.w,H=S.h;
+    window.addEventListener('resize',()=>{S=fitCanvas(cv);c=S.c;W=S.w;H=S.h;});
+    let chaos=0, ph=0, active=false;
+    function line(){ c.clearRect(0,0,W,H); const mid=H*0.62;
+      c.lineWidth=2; c.strokeStyle='rgba(255,93,115,'+(0.5+chaos*0.4)+')'; c.shadowColor='rgba(255,93,115,.6)'; c.shadowBlur=8; c.beginPath();
+      for(let x=0;x<=W;x++){ const p=((ph-(W-x)/90)%1+1)%1; let y=mid;
+        // base beat
+        if(p<0.5){} else if(p<0.55){y=mid-(H*0.16)*Math.sin((p-0.5)/0.05*Math.PI);}
+        // chaos noise
+        if(chaos>0){ y+=(Math.sin(x*0.35+ph*9)*6 + (Math.random()-0.5)*10)*chaos;
+          if(Math.random()<0.02*chaos) y-=Math.random()*40*chaos; }
+        x===0?c.moveTo(x,y):c.lineTo(x,y); }
+      c.stroke(); c.shadowBlur=0; ph+=0.02+chaos*0.02; requestAnimationFrame(line); }
+    if(!reduce)requestAnimationFrame(line); else{ line(); }
+    const startBtn=document.getElementById('anxStart'),hint=document.getElementById('hint3'),countEl=document.getElementById('anxCount'),stage=document.getElementById('stage3');
+    const thoughts=['他討厭我嗎？','我是不是說錯話了？','還是他在忙…？','要不要再傳一則？','是不是我太主動了？','他已讀為什麼不回？','算了我不該約他','其實他沒興趣吧'];
+    let spawned=0,closed=0,TARGET=7,iv=null,done=false;
+    function spawn(){ if(spawned>=TARGET){clearInterval(iv);return;}
+      const el=document.createElement('div'); el.className='thought'+(reduce?'':' glitchy'); el.textContent=thoughts[spawned%thoughts.length];
+      const x=document.createElement('button'); x.className='x'; x.textContent='✕'; x.setAttribute('aria-label','關掉這個念頭'); el.appendChild(x);
+      el.style.left=(8+Math.random()*52)+'%'; el.style.top=(28+Math.random()*40)+'%';
+      x.addEventListener('click',()=>{ el.remove(); closed++; chaos=Math.max(0,1-closed/TARGET); countEl.textContent='已關掉 '+closed+' / '+TARGET; if(closed>=TARGET&&!done)finish(); });
+      stage.appendChild(el); spawned++; countEl.textContent='已關掉 '+closed+' / '+TARGET; }
+    function begin(){ active=true; chaos=1; startBtn.style.display='none'; hint.style.display='block'; setVitals(108,'血清素 ↓ / 皮質醇 ↑'); spawn(); iv=setInterval(spawn,900); }
+    function finish(){ done=true; clearInterval(iv); chaos=0; stage.querySelectorAll('.thought').forEach(el=>el.remove()); hint.style.opacity='0';
+      reveal(document.getElementById('alert3'),document.getElementById('bs3'),document.getElementById('next3'),104,'血清素 ↓ 反芻'); }
+    startBtn.addEventListener('click',begin);
+  })();
+
+  /* ---------- Scene 4: leaning figures + blanket + motes ---------- */
+  (function(){
+    const slide=document.getElementById('slide4'),figA=document.getElementById('figA'),figB=document.getElementById('figB'),blanket=document.getElementById('blanket'),glow=document.getElementById('glow4'),label=document.getElementById('slideLabel'),motes=document.getElementById('motes');
+    if(!reduce){ for(let i=0;i<8;i++){ const m=document.createElement('span'); m.className='mote';
+      m.style.left=(20+Math.random()*60)+'%'; m.style.bottom=(28+Math.random()*42)+'%';
+      m.style.animation='floatUp '+(5+Math.random()*4).toFixed(1)+'s ease-in '+(Math.random()*5).toFixed(1)+'s infinite'; motes.appendChild(m); } }
+    let done=false;
+    slide.addEventListener('input',()=>{ const v=+slide.value/100;
+      figA.style.transform='translateX('+(50*v).toFixed(1)+'px)';
+      figB.style.transform='translateX('+(-50*v).toFixed(1)+'px)';
+      blanket.style.transform='translateY('+((1-v)*100).toFixed(1)+'%)';
+      glow.style.opacity=(0.15+v*0.72).toFixed(2);
+      targetBpm=105-v*37; roH.innerHTML='狀態：<b>催產素 ↑ 依附</b>';
+      if(v>=1&&!done){ done=true; label.textContent='靠在一起了。'; reveal(document.getElementById('alert4'),document.getElementById('bs4'),document.getElementById('next4'),68,'催產素 ↑ 安穩'); } });
+  })();
+
+  /* ---------- quiz ---------- */
+  (function(){
+    const quiz=document.getElementById('quiz'),qs=quiz.querySelectorAll('.q');
+    const scores={dopamine:0,norepinephrine:0,serotonin:0,oxytocin:0,cortisol:0}; let qi=0;
+    const TYPES={
+      dopamine:{type:'多巴胺型',en:'The Chaser / 追逐者',desc:'你為「渴望」與「期待」而心動。越是若即若離，你的獎賞系統越活躍——追逐的過程，本身就是你最上癮的部分。',order:'把不確定感當調味料就好，別讓它變成主食。真正的安穩，也值得你上癮。',attach:'焦慮–興奮型',score:84},
+      norepinephrine:{type:'正腎上腺素型',en:'The Rush / 悸動者',desc:'你的愛情寫在心跳裡。手心冒汗、語無倫次、吃不下睡不著——你用整個交感神經系統在愛一個人。',order:'悸動是真的，但記得也要好好吃飯、好好睡覺。身體是你談戀愛的本錢。',attach:'高喚起型',score:79},
+      serotonin:{type:'血清素（低）型',en:'The Loop / 思念者',desc:'你會反覆重播和他有關的一切，一個字一個字地解讀。這不是你想太多——你的神經化學，正逼著你重播。',order:'你的大腦在跑迴圈，這很正常。與其一個人重播，不如直接傳訊息給他。',attach:'著迷–反芻型',score:88},
+      oxytocin:{type:'催產素型',en:'The Anchor / 依附者',desc:'你靠擁抱、信任與踏實感充電。比起追逐的刺激，你更享受兩個人安靜連結的重量。',order:'多抱一下——這是有科學根據的處方。你天生擅長把心動變成長久。',attach:'安全依附型',score:82},
+      cortisol:{type:'皮質醇型',en:'The Guard / 警戒者',desc:'心動對你來說，同時是一種警戒。你既期待又不安，總在感情裡打起十二分精神。',order:'允許自己緊張吧，那代表你真的在乎。但也記得：不是每次已讀不回，都是壞事。',attach:'謹慎–警覺型',score:76}
+    };
+    quiz.querySelectorAll('.opt').forEach(btn=>btn.addEventListener('click',()=>{ const w=btn.dataset.w; if(scores[w]!==undefined)scores[w]++;
+      qs[qi].classList.remove('active'); qi++; if(qi<qs.length)qs[qi].classList.add('active'); else showResult(); }));
+    function showResult(){ const pr=['serotonin','dopamine','oxytocin','norepinephrine','cortisol']; let best=pr[0]; pr.forEach(k=>{if(scores[k]>scores[best])best=k;});
+      const t=TYPES[best]; document.getElementById('cardType').textContent=t.type; document.getElementById('cardEn').textContent=t.en;
+      document.getElementById('cardDesc').textContent=t.desc; document.getElementById('cardOrder').textContent=t.order;
+      document.getElementById('attachVal').textContent=t.attach; document.getElementById('scoreVal').textContent=t.score;
+      quiz.style.display='none'; const stage=document.getElementById('cardStage'); stage.classList.add('show');
+      setTimeout(()=>{document.getElementById('scoreFill').style.width=t.score+'%';},100);
+      stage.scrollIntoView({behavior:reduce?'auto':'smooth',block:'center'}); }
+    document.getElementById('againBtn').addEventListener('click',()=>{ Object.keys(scores).forEach(k=>scores[k]=0); qi=0;
+      qs.forEach(q=>q.classList.remove('active')); qs[0].classList.add('active'); document.getElementById('cardStage').classList.remove('show');
+      document.getElementById('scoreFill').style.width='0'; quiz.style.display='block'; document.getElementById('report').scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'}); });
+    document.getElementById('scrollShare').addEventListener('click',()=>document.getElementById('reportCard').scrollIntoView({behavior:reduce?'auto':'smooth',block:'center'}));
+    document.getElementById('ctaLink').addEventListener('click',e=>{e.preventDefault();document.getElementById('report').scrollIntoView({behavior:'smooth'});});
+  })();
+})();
+</script>
+</body>
+</html>
