@@ -8,6 +8,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Space+Mono:wght@400;700&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&display=swap" rel="stylesheet">
+<!-- 引入 html2canvas 截圖套件 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
   :root{
     --ink:#180B15; --ink-2:#22101C; --panel:#2C1524; --line:#43263A;
@@ -33,7 +35,6 @@
   :focus-visible{outline:2px solid var(--signal);outline-offset:3px;border-radius:6px}
   .eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--signal);display:inline-flex;align-items:center;gap:10px}
   .eyebrow::before{content:"";width:24px;height:1px;background:var(--signal-dim)}
-
   /* ---------- top readout ---------- */
   #readout{position:fixed;top:0;left:0;right:0;height:var(--bar);z-index:50;
     display:flex;align-items:center;gap:14px;padding:0 18px;
@@ -45,7 +46,6 @@
   #readout .ro-h{margin-left:auto;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:44vw}
   #readout .ro-h b{color:var(--rose-soft);font-weight:400}
   @media(max-width:520px){#readout .ro-tag{display:none}}
-
   /* ---------- hero ---------- */
   .hero{min-height:calc(100svh - var(--bar));display:flex;flex-direction:column;justify-content:center;padding:70px 0 60px}
   .hero h1{font-family:var(--serif);font-weight:600;font-size:clamp(38px,7vw,80px);line-height:1.05;letter-spacing:-.01em;margin:20px 0 22px;max-width:16ch}
@@ -60,7 +60,6 @@
     transition:transform .18s, background .18s;box-shadow:0 12px 40px -12px rgba(255,93,115,.7)}
   .cta:hover{transform:translateY(-2px);background:var(--rose-soft)}
   .cta .arw{transition:transform .18s} .cta:hover .arw{transform:translateY(3px)}
-
   /* ---------- scene shell ---------- */
   .scene{padding:70px 0;border-top:1px solid var(--line)}
   .scene-tag{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 16px;margin-bottom:14px}
@@ -69,7 +68,6 @@
   .scene h2{font-family:var(--serif);font-size:clamp(26px,4.4vw,42px);font-weight:600;line-height:1.1;margin-bottom:12px}
   .scene .setting{color:var(--muted);max-width:56ch;margin-bottom:6px}
   .scene .inner{font-family:var(--serif);font-style:italic;font-size:clamp(17px,2.3vw,21px);color:var(--text);border-left:2px solid var(--rose);padding-left:16px;margin:18px 0 24px}
-
   /* interactive stage + texture layers */
   .stage{position:relative;isolation:isolate;background:radial-gradient(140% 120% at 50% 0%, #2a1322, #160a12 70%);
     border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:0 40px 90px -55px rgba(0,0,0,.95), inset 0 1px 0 rgba(255,255,255,.03)}
@@ -78,7 +76,6 @@
   .stage canvas{position:absolute;inset:0;width:100%;height:100%;z-index:1}
   .stage-hint{position:absolute;top:18px;left:0;right:0;text-align:center;font-family:var(--mono);font-size:12.5px;color:var(--muted);letter-spacing:.05em;z-index:6;pointer-events:none;transition:opacity .5s}
   .stage-hint b{color:var(--signal)}
-
   .alert{position:absolute;left:16px;right:16px;bottom:16px;z-index:9;
     background:rgba(20,9,16,.92);backdrop-filter:blur(6px);border:1px solid var(--rose);border-radius:14px;padding:14px 16px;
     display:flex;gap:12px;align-items:flex-start;transform:translateY(18px);opacity:0;pointer-events:none;transition:all .5s cubic-bezier(.2,.7,.2,1)}
@@ -88,7 +85,6 @@
   .alert .txt{font-family:var(--mono);font-size:12.5px;color:var(--text);letter-spacing:.02em;line-height:1.55}
   .alert .txt b{color:var(--rose-soft);font-weight:700;display:block;margin-bottom:2px}
   .alert.cool .txt b{color:var(--signal)}
-
   .backstage{margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:14px;max-height:0;opacity:0;overflow:hidden;transition:max-height .6s ease, opacity .6s ease, margin .6s ease}
   .backstage.show{max-height:460px;opacity:1}
   @media(max-width:640px){.backstage{grid-template-columns:1fr}}
@@ -99,7 +95,6 @@
   .next{margin-top:22px;display:none;align-items:center;gap:10px;background:transparent;color:var(--rose);border:1px solid var(--rose);
     font-family:var(--mono);font-weight:700;font-size:14px;letter-spacing:.05em;padding:12px 22px;border-radius:100px;transition:all .18s}
   .next.show{display:inline-flex} .next:hover{background:var(--rose);color:#2A0A12}
-
   /* stage sizing */
   #stage1,#stage3{height:360px} #stage4{height:360px}
   .flash{position:absolute;inset:0;background:#fff;opacity:0;z-index:8;pointer-events:none}
@@ -117,7 +112,6 @@
   .spark-wrap.lit .spark-halo{animation:none;opacity:1;width:180px;height:180px;background:radial-gradient(circle, rgba(255,150,130,.5), transparent 62%)}
   .spark-wrap.lit .spark-svg{filter:drop-shadow(0 0 26px rgba(255,150,140,.95))}
   .spark-wrap.lit .eyeg{animation:none}
-
   /* ===== Scene 2 ===== */
   #stage2{padding:30px 18px 24px;display:flex;flex-direction:column;align-items:center;gap:20px;min-height:360px}
   .s2-bloom{position:absolute;left:50%;top:36%;width:340px;height:340px;transform:translate(-50%,-50%) scale(.4);
@@ -139,7 +133,6 @@
   .hold-fill{position:absolute;left:0;right:0;bottom:0;height:0%;background:linear-gradient(180deg,var(--rose),var(--ember));opacity:.85;z-index:-1;transition:height .05s linear}
   .holdbtn .ic2{position:relative;z-index:2;filter:drop-shadow(0 0 6px rgba(255,93,115,.6))}
   .hold-label{position:relative;z-index:5;font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.04em}
-
   /* ===== Scene 3 ===== */
   #stage3{padding:0}
   .anx-chat{position:absolute;left:20px;top:22px;font-family:var(--mono);font-size:11.5px;color:var(--muted-2);max-width:62%;line-height:1.7;z-index:5}
@@ -158,7 +151,6 @@
   .anx-start{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);z-index:7;background:var(--rose);color:#2a0a12;border:none;
     font-family:var(--mono);font-weight:700;font-size:13px;padding:11px 20px;border-radius:100px;box-shadow:0 8px 24px -10px rgba(255,93,115,.7)}
   .anx-count{position:absolute;left:20px;bottom:22px;font-family:var(--mono);font-size:11px;color:var(--muted-2);z-index:7}
-
   /* ===== Scene 4 ===== */
   #stage4{padding:0;background:radial-gradient(150% 130% at 50% 28%, #301c1a, #180c12 72%)}
   .sunlight{position:absolute;top:-50px;right:-40px;width:320px;height:360px;z-index:1;pointer-events:none;filter:blur(4px);
@@ -189,7 +181,6 @@
   input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;border-radius:50%;
     background:radial-gradient(circle at 40% 40%,#fff,var(--ember));border:none;cursor:grab;box-shadow:0 0 16px rgba(255,159,92,.7)}
   input[type=range]::-moz-range-thumb{width:28px;height:28px;border-radius:50%;background:var(--ember);border:2px solid #fff;cursor:grab;box-shadow:0 0 16px rgba(255,159,92,.7)}
-
   /* ---------- science recap ---------- */
   .sci{padding:80px 0}
   .sci h2{font-family:var(--serif);font-size:clamp(26px,4.2vw,40px);font-weight:600;margin:14px 0 10px}
@@ -204,7 +195,6 @@
     .sci-table td{display:block;border:none;padding:3px 0}
     .sci-table tr{display:block;border-bottom:1px solid var(--line);padding:14px 0}
     .sci-table td.h{font-size:18px;margin-bottom:4px}}
-
   /* ---------- quiz ---------- */
   .report{padding:20px 0 90px}
   .r-head{text-align:center;max-width:52ch;margin:0 auto 36px}
@@ -243,7 +233,6 @@
   .card-actions button.primary{background:var(--rose);color:#2A0A12;border-color:var(--rose)}
   .card-actions button:hover{transform:translateY(-2px)}
   .share-note{text-align:center;font-family:var(--mono);font-size:11px;color:var(--muted-2);margin-top:14px}
-
   /* ---------- footer ---------- */
   footer{padding:70px 0 60px;border-top:1px solid var(--line)}
   .brandline{font-family:var(--serif);font-size:clamp(24px,3.6vw,34px);font-weight:600;line-height:1.2;max-width:20ch;margin-bottom:8px}
@@ -255,39 +244,34 @@
   .refs summary{font-family:var(--mono);font-size:12px;letter-spacing:.14em;color:var(--muted);cursor:pointer;text-transform:uppercase}
   .refs ol{margin:16px 0 0 18px;color:var(--muted-2);font-size:12.5px;line-height:1.9}
   .disclaimer{margin-top:18px;font-size:12px;color:var(--muted-2);line-height:1.7}
-
   @media (prefers-reduced-motion: reduce){*{scroll-behavior:auto;animation-duration:.001ms!important}}
 </style>
 </head>
 <body>
-
 <div id="readout" aria-hidden="true">
   <span class="ro-tag">READOUT</span>
   <svg class="mini" viewBox="0 0 56 20"><polyline id="miniLine" points="" fill="none" stroke="#FF5D73" stroke-width="1.6"/></svg>
   <span><span class="ro-bpm" id="roBpm">72</span> BPM</span>
   <span class="ro-h" id="roH">狀態：<b>待命</b></span>
 </div>
-
 <section class="hero"><div class="wrap">
   <span class="eyebrow">泛思醫學 · 七夕特輯 / An Interactive Field Report</span>
   <h1>一場戀愛，<br>是<em>四幕化學風暴</em>。</h1>
   <p class="lede">從 <b>0.2 秒</b>的第一眼，到第六個月沙發上的無聲週末——每一幕，你的身體都在偷偷做決定。往下，親手走完這場風暴。</p>
   <div class="scene-list">
-    <span><b>一</b>　0.2秒 · 一見鍾情</span>
-    <span><b>二</b>　第1週 · 凌晨1:30</span>
-    <span><b>三</b>　第1個月 · 已讀不回</span>
-    <span><b>四</b>　第6個月 · 沙發時光</span>
+    <span><b>一</b> 0.2秒 · 一見鍾情</span>
+    <span><b>二</b> 第1週 · 凌晨1:30</span>
+    <span><b>三</b> 第1個月 · 已讀不回</span>
+    <span><b>四</b> 第6個月 · 沙發時光</span>
   </div>
   <a class="cta" href="#scene1">進入第一幕 <span class="arw">↓</span></a>
 </div></section>
-
 <!-- SCENE 1 -->
 <section class="scene" id="scene1"><div class="wrap">
   <div class="scene-tag"><span class="act">第一幕 · THE SPARK</span><span class="time">T + 0.2 秒</span></div>
   <h2>確認過眼神，風暴開始</h2>
   <p class="setting">喧鬧的聚會，你推開門。視線穿過人海，剛好和角落的那道光對上眼。周圍的聲音像被按了靜音，你的世界只剩那一點亮。</p>
   <p class="inner">「等等……那道光是誰？」</p>
-
   <div class="stage" id="stage1">
     <canvas id="cv1"></canvas>
     <div class="stage-hint" id="hint1">滿室的眼神裡，<b>找到那雙為你而亮的</b></div>
@@ -337,25 +321,22 @@
     <div class="flash" id="flash1"></div>
     <div class="alert" id="alert1"><span class="ic">⚠️</span><span class="txt"><b>偵測到不明吸引力</b>多巴胺閥門已開啟｜反應時間 0.18 秒</span></div>
   </div>
-
   <div class="backstage" id="bs1">
     <div class="bs-card"><div class="lbl">科學後台</div><p>大腦獎賞迴路（<b>腹側被蓋區 VTA、尾狀核</b>）瞬間點亮。研究提出：約五分之一秒、多達 <b>12 個腦區</b>協同釋放多巴胺等物質——與大腦「成癮」時亮起的是同一條路。</p></div>
     <div class="bs-card"><div class="lbl">人話翻譯</div><p>不是你意志力差。是你的獎賞系統，已經自動把他<b>標記成了獎勵</b>。</p></div>
   </div>
   <a class="next" id="next1" href="#scene2">下一幕 · 凌晨 1:30 ↓</a>
 </div></section>
-
 <!-- SCENE 2 -->
 <section class="scene" id="scene2"><div class="wrap">
   <div class="scene-tag"><span class="act">第二幕 · THE STORM</span><span class="time">T + 第 1 天～第 1 週</span></div>
   <h2>凌晨 1:30 的「正在輸入中…」</h2>
   <p class="setting">夜深了，你翻來覆去。手機突然亮起，是他：「你睡了嗎？」你秒開對話框，看著頂端閃爍的「正在輸入中…」，嘴角忍不住上揚，手心微微出汗。</p>
   <p class="inner">「他主動密我了！我要回什麼才不會太刻意？」</p>
-
   <div class="stage" id="stage2">
     <div class="s2-bloom" id="s2bloom"></div>
     <div class="phone">
-      <div class="ph-top">● ● ●　　訊息　　01:30</div>
+      <div class="ph-top">● ● ●  訊息  01:30</div>
       <div class="bub in">你睡了嗎？</div>
       <div class="bub time">01:30</div>
       <div class="typing" id="typing2"><i></i><i></i><i></i></div>
@@ -365,21 +346,18 @@
     <div class="hold-label" id="holdLabel">長按愛心回覆</div>
     <div class="alert" id="alert2"><span class="ic">📈</span><span class="txt"><b>正腎上腺素超標</b>睡意歸零 · 心動過速 · 你已進入成癮狀態</span></div>
   </div>
-
   <div class="backstage" id="bs2">
     <div class="bs-card"><div class="lbl">科學後台</div><p>期待引發多巴胺瘋狂分泌；<b>正腎上腺素</b>激增啟動交感神經「戰或逃」——心跳加速、手心冒汗、輕微失眠。你以為的浪漫悸動，其實接近一次身體警戒。</p></div>
     <div class="bs-card"><div class="lbl">人話翻譯</div><p>胃裡那群蝴蝶，其實是你的<b>交感神經在振翅</b>。</p></div>
   </div>
   <a class="next" id="next2" href="#scene3">下一幕 · 已讀不回 ↓</a>
 </div></section>
-
 <!-- SCENE 3 -->
 <section class="scene" id="scene3"><div class="wrap">
   <div class="scene-tag"><span class="act">第三幕 · THE ANXIETY</span><span class="time">T + 第 1 個月</span></div>
   <h2>已讀不回的 180 分鐘</h2>
   <p class="setting">曖昧期最難熬的時刻。你發出邀約後，對方一直沒回。這三小時裡，你解鎖手機數十次，把對話往上滑了又滑，甚至開始懷疑自己。</p>
   <p class="inner">「為什麼不回？在忙嗎？還是對我沒興趣？」</p>
-
   <div class="stage" id="stage3">
     <canvas id="cv3"></canvas>
     <div class="anx-chat">你：<b>週末要不要一起去看那間新開的店？</b><br><span style="color:var(--muted-2)">已讀 · 15:02 · 未回覆</span></div>
@@ -389,21 +367,18 @@
     <div class="stage-hint" id="hint3" style="display:none">把冒出來的念頭，<b>一個一個關掉</b></div>
     <div class="alert" id="alert3"><span class="ic">📉</span><span class="txt"><b>血清素系統活性驟降</b>理智線警告 · 大腦呈現輕度強迫特徵</span></div>
   </div>
-
   <div class="backstage" id="bs3">
     <div class="bs-card"><div class="lbl">科學後台</div><p><b>血清素系統活性下降</b>（血清素轉運體密度接近強迫症 OCD 患者水平），讓你無法停止反覆思念；同時<b>皮質醇上升</b>，大腦把這段曖昧判讀成一種壓力。</p></div>
     <div class="bs-card"><div class="lbl">人話翻譯</div><p>你不是想太多。是你的神經化學，正<b>逼著你重播</b>。</p></div>
   </div>
   <a class="next" id="next3" href="#scene4">下一幕 · 沙發時光 ↓</a>
 </div></section>
-
 <!-- SCENE 4 -->
 <section class="scene" id="scene4"><div class="wrap">
   <div class="scene-tag"><span class="act">第四幕 · THE ANCHOR</span><span class="time">T + 第 6 個月之後</span></div>
   <h2>沙發上的無聲週末</h2>
   <p class="setting">星期日午後，陽光灑進客廳。兩束光坐在同一張沙發上，各自做著自己的事。沒有人說話，但只要靠得夠近，就覺得無比安心。</p>
   <p class="inner">「這樣靜靜地待著，真好。」</p>
-
   <div class="stage" id="stage4">
     <div class="sunlight"></div>
     <div class="glow4b" id="glow4"></div>
@@ -416,18 +391,16 @@
     <div class="blanket4" id="blanket"></div>
     <div class="slider-wrap">
       <label for="slide4" id="slideLabel">慢慢滑動，讓兩個人靠近彼此 →</label>
-      <input type="range" id="slide4" min="0" max="100" value="0" aria-label="滑動讓他靠上你的肩">
+      <input type="range" id="slide4" min="0" max="100" value="0" aria-label="滑滑讓他靠上你的肩">
     </div>
     <div class="alert cool" id="alert4"><span class="ic">🛡️</span><span class="txt"><b>催產素注入完成</b>化學風暴平息 · 已建立長期安全連結</span></div>
   </div>
-
   <div class="backstage" id="bs4">
     <div class="bs-card"><div class="lbl">科學後台</div><p>多巴胺的狂風暴雨已平息。<b>催產素</b>在擁抱與親密接觸中緩緩釋放，抑制杏仁核的威脅反應，建立起深層的信任與依附——它與血管加壓素一起，讓關係從激情走向安穩。</p></div>
     <div class="bs-card"><div class="lbl">人話翻譯</div><p>一個擁抱，就是一次<b>生化簽約</b>。心動讓你們相遇，催產素讓你們留下。</p></div>
   </div>
   <a class="next" id="next4" href="#science">看完整科學對照 ↓</a>
 </div></section>
-
 <!-- SCIENCE RECAP -->
 <section class="sci" id="science"><div class="wrap">
   <span class="eyebrow">The Evidence · 科學對照表</span>
@@ -443,7 +416,6 @@
     </tbody>
   </table>
 </div></section>
-
 <!-- QUIZ -->
 <section class="report" id="report"><div class="wrap">
   <div class="r-head">
@@ -480,13 +452,12 @@
         <div class="cm"><div class="cm-top"><span>依附傾向 / Attachment</span><span id="attachVal">—</span></div></div>
         <div class="card-order"><div class="ttl">醫囑 / Prescription</div><div class="txt" id="cardOrder">—</div></div>
       </div>
-      <div class="card-foot"><span class="brand">FANSCI 泛思醫學</span><span style="display:flex;align-items:center;gap:10px">把嚴謹，做得好玩 <span class="qr" aria-hidden="true"></span></span></div>
+      <div class="card-foot"><span class="brand">FANSCI 泛思醫學</span></div>
     </div>
     <div class="card-actions"><button class="primary" id="againBtn">重新測一次</button><button id="scrollShare">截圖分享這張報告</button></div>
     <p class="share-note">※ 截圖上方報告卡，分享到限動／群組。本頁為科普娛樂內容，非診斷用途。</p>
   </div>
 </div></section>
-
 <footer><div class="wrap">
   <span class="eyebrow">泛思醫學 · Fansci</span>
   <p class="brandline" style="margin-top:16px">嚴謹的醫學，<em>也可以讓人想分享</em>。</p>
@@ -503,13 +474,11 @@
     <p class="disclaimer">本頁為科普與娛樂性質內容，用於展示醫學傳播的可能性，不構成醫療建議或診斷。部分時間標記與情境為敘事化呈現；個別生理反應因人而異。</p>
   </details>
 </div></footer>
-
 <script>
 (function(){
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const DPR = Math.min(window.devicePixelRatio||1, 2);
   function fitCanvas(cv){ const r=cv.getBoundingClientRect(); cv.width=Math.max(1,r.width*DPR); cv.height=Math.max(1,r.height*DPR); const c=cv.getContext('2d'); c.setTransform(DPR,0,0,DPR,0,0); return {c,w:r.width,h:r.height}; }
-
   /* ---------- top readout ---------- */
   const miniLine=document.getElementById('miniLine'),roBpm=document.getElementById('roBpm'),roH=document.getElementById('roH');
   let bpm=72,targetBpm=72,tphase=0;
@@ -518,7 +487,6 @@
   if(!reduce)requestAnimationFrame(tickRO);
   function setVitals(b,h){targetBpm=b;roH.innerHTML='狀態：<b>'+h+'</b>';}
   function reveal(a,bs,nx,b,h){if(a)a.classList.add('show');if(bs)bs.classList.add('show');if(nx)nx.classList.add('show');setVitals(b,h);}
-
   /* ---------- Scene 1: a party of eyes, one alluring pair ---------- */
   (function(){
     const cv=document.getElementById('cv1'); let S=fitCanvas(cv),c=S.c,W=S.w,H=S.h;
@@ -559,7 +527,6 @@
     eyes.addEventListener('click',fire);
     eyes.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();fire();}});
   })();
-
   /* ---------- Scene 2: long press ---------- */
   (function(){
     const btn=document.getElementById('hold2'),fill=document.getElementById('holdFill'),bloom=document.getElementById('s2bloom');
@@ -583,7 +550,6 @@
     btn.addEventListener('pointerdown',down); window.addEventListener('pointerup',up);
     btn.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&!done){e.preventDefault();finish();}});
   })();
-
   /* ---------- Scene 3: ECG chaos + intrusive thoughts ---------- */
   (function(){
     const cv=document.getElementById('cv3'); let S=fitCanvas(cv),c=S.c,W=S.w,H=S.h;
@@ -614,7 +580,6 @@
       reveal(document.getElementById('alert3'),document.getElementById('bs3'),document.getElementById('next3'),104,'血清素 ↓ 反芻'); }
     startBtn.addEventListener('click',begin);
   })();
-
   /* ---------- Scene 4: leaning figures + blanket + motes ---------- */
   (function(){
     const slide=document.getElementById('slide4'),figA=document.getElementById('figA'),figB=document.getElementById('figB'),blanket=document.getElementById('blanket'),glow=document.getElementById('glow4'),label=document.getElementById('slideLabel'),motes=document.getElementById('motes');
@@ -630,8 +595,7 @@
       targetBpm=105-v*37; roH.innerHTML='狀態：<b>催產素 ↑ 依附</b>';
       if(v>=1&&!done){ done=true; label.textContent='靠在一起了。'; reveal(document.getElementById('alert4'),document.getElementById('bs4'),document.getElementById('next4'),68,'催產素 ↑ 安穩'); } });
   })();
-
-  /* ---------- quiz ---------- */
+  /* ---------- quiz & screenshot ---------- */
   (function(){
     const quiz=document.getElementById('quiz'),qs=quiz.querySelectorAll('.q');
     const scores={dopamine:0,norepinephrine:0,serotonin:0,oxytocin:0,cortisol:0}; let qi=0;
@@ -644,6 +608,7 @@
     };
     quiz.querySelectorAll('.opt').forEach(btn=>btn.addEventListener('click',()=>{ const w=btn.dataset.w; if(scores[w]!==undefined)scores[w]++;
       qs[qi].classList.remove('active'); qi++; if(qi<qs.length)qs[qi].classList.add('active'); else showResult(); }));
+      
     function showResult(){ const pr=['serotonin','dopamine','oxytocin','norepinephrine','cortisol']; let best=pr[0]; pr.forEach(k=>{if(scores[k]>scores[best])best=k;});
       const t=TYPES[best]; document.getElementById('cardType').textContent=t.type; document.getElementById('cardEn').textContent=t.en;
       document.getElementById('cardDesc').textContent=t.desc; document.getElementById('cardOrder').textContent=t.order;
@@ -651,10 +616,66 @@
       quiz.style.display='none'; const stage=document.getElementById('cardStage'); stage.classList.add('show');
       setTimeout(()=>{document.getElementById('scoreFill').style.width=t.score+'%';},100);
       stage.scrollIntoView({behavior:reduce?'auto':'smooth',block:'center'}); }
+      
     document.getElementById('againBtn').addEventListener('click',()=>{ Object.keys(scores).forEach(k=>scores[k]=0); qi=0;
       qs.forEach(q=>q.classList.remove('active')); qs[0].classList.add('active'); document.getElementById('cardStage').classList.remove('show');
       document.getElementById('scoreFill').style.width='0'; quiz.style.display='block'; document.getElementById('report').scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'}); });
-    document.getElementById('scrollShare').addEventListener('click',()=>document.getElementById('reportCard').scrollIntoView({behavior:reduce?'auto':'smooth',block:'center'}));
+      
+    // ---------- 修改處：截圖與分享邏輯 ----------
+    document.getElementById('scrollShare').addEventListener('click', async () => {
+      const shareBtn = document.getElementById('scrollShare');
+      const reportElement = document.getElementById('reportCard'); // 指定截圖區域
+
+      // 按鈕顯示讀取中狀態
+      const originalText = shareBtn.innerText;
+      shareBtn.innerText = '圖片生成中...';
+      shareBtn.disabled = true;
+
+      try {
+        // 執行截圖
+        const canvas = await html2canvas(reportElement, {
+          scale: 2, // 提高解析度
+          useCORS: true, 
+          backgroundColor: '#F6ECE6' // 確保背景色符合 .card 的設定
+        });
+
+        canvas.toBlob(async (blob) => {
+          const file = new File([blob], 'love-report.png', { type: 'image/png' });
+
+          // 判斷裝置是否支援原生分享 (Web Share API)
+          if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            try {
+              await navigator.share({
+                title: '我的戀愛化學報告',
+                text: '來看看我的戀愛腦成分是哪一種！',
+                files: [file]
+              });
+            } catch (error) {
+              console.log('使用者取消分享或發生錯誤', error);
+            }
+          } else {
+            // 降級方案：不支援原生分享時，直接下載圖片
+            const link = document.createElement('a');
+            link.download = 'my-love-report.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            alert('報告圖片已下載！你可以直接發佈到社群平台囉。');
+          }
+          
+          // 恢復按鈕狀態
+          shareBtn.innerText = originalText;
+          shareBtn.disabled = false;
+        }, 'image/png');
+
+      } catch (error) {
+        console.error('截圖失敗:', error);
+        alert('圖片生成失敗，請稍後再試。');
+        shareBtn.innerText = originalText;
+        shareBtn.disabled = false;
+      }
+    });
+    // ------------------------------------------
+
     document.getElementById('ctaLink').addEventListener('click',e=>{e.preventDefault();document.getElementById('report').scrollIntoView({behavior:'smooth'});});
   })();
 })();
